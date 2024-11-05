@@ -4,7 +4,7 @@ trigger:
 pool:
   name: "DotNetPool"
   demands:
-    - agent.name equals linux-agent
+    - Agent.Name -equals linux-agent
 
 variables:
   buildConfiguration: "Release"
