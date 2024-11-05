@@ -44,7 +44,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Build Artifacts'
       inputs:
-        PathtoPublish: 'c:/customstagingdirectory'
+        PathtoPublish: 'c:\customstagingdirectory'
         ArtifactName: 'drop'
 
 - stage: Deploy
@@ -55,9 +55,10 @@ stages:
     steps:
     - task: FtpUpload@2
       inputs:
+        credentialsOption: 'inputs'
         serverUrl: 'ftp://4.237.75.19'  # FTP server address
         username: '$(FTP_USERNAME)'  # FTP username
         password: '$(FTP_PASSWORD)'  # FTP password
         rootDirectory: 'c:/customstagingdirectory/drop'  # Folder where artifacts are stored
         remoteDirectory: 'c:/inetpub/dotnetproject'  # Remote folder on IIS server
-        clean: true  #Clean the remote folder before uploading
+        clean: true  # Optional: Clean the remote folder before uploading
