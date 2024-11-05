@@ -1,0 +1,63 @@
+trigger:
+- master
+
+pool:
+  name: "Demo_DotNet_Project_Pool"
+  demands:
+    - agent.name -equals agent1
+
+variables:
+  buildconfiguration: "Release"
+stages:
+- stage: Build
+  displayName: "Build Stage"
+  jobs:
+  - job: BuildJob
+    displayName: "Restore & Build"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Restore Nuget Packages"
+      inputs:
+        command: "restore"
+        projects: "**/*.csproj"
+    
+    - task: DotNetCoreCLI@2
+      displayName: "Build the project"
+      inputs:
+        command: "build"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration)"
+      
+- stage: Publish
+  displayName: "Publish Stage"
+  jobs:
+  - job: PublishJob
+    displayName: "Publish the project"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Publish the project"
+      inputs:
+        command: "publish"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration) --output C:/customstagingdirectory"
+    
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Build Artifacts'
+      inputs:
+        PathtoPublish: 'c:/customstagingdirectory'
+        ArtifactName: 'drop'
+
+- stage: Deploy
+  displayName: "Deployment Stage"
+  jobs:
+  - job: DeployToDevIIS
+    displayName: "Deploy to development machine"
+    steps:
+    - task: FtpUpload@2
+      inputs:
+        serverUrl: 'ftp://4.237.75.19'  # FTP server address
+        username: '$(FTP_USERNAME)'  # FTP username
+        password: '$(FTP_PASSWORD)'  # FTP password
+        rootDirectory: 'c:/customstagingdirectory/drop'  # Folder where artifacts are stored
+        remoteDirectory: 'c:/inetpub/dotnetproject'  # Remote folder on IIS server
+        clean: true  #Clean the remote folder before uploading
