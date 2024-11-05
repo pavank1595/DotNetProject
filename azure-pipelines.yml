@@ -1,0 +1,50 @@
+trigger:
+- master
+
+pool:
+  name: "DotNetPool"
+  demands:
+    - agent.name equals linux-agent
+
+variables:
+  buildConfiguration: "Release"
+  
+stages:
+- stage: Build
+  displayName: "Build Stage"
+  jobs:
+  - job: BuildJob
+    displayName: "Build the project"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Restore NuGet Packages"
+      inputs:
+        command: "restore"
+        projects: "**/*.csproj"
+
+    - task: DotNetCoreCLI@2
+      displayName: "Building the project"
+      inputs:
+        command: "build"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration)"
+
+- stage: Publish
+  displayName: "Publish Stage"
+  jobs:
+  - job: PublishJob
+    displayName: "Publish the project"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Publishing the project"
+      inputs:
+        command: "publish"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration) --output /home/devopsagentlinux/agent_work"
+    
+    - task: PublishBuildArtifacts@1
+      displayName: "Publishing build artifacts"
+      inputs:
+        PathtoPublish: "/home/devopsagentlinux/agent_work"
+        ArtifactName: "myArtifact"
+
