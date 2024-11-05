@@ -24,6 +24,7 @@ stages:
       displayName: "Restore Nuget Packages"
       inputs:
         command: "restore"
+        projects: "**/*.csproj"
     
     - task: DotNetCoreCLI@2
       displayName: "Build the project"
