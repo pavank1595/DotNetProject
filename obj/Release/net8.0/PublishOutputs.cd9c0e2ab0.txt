@@ -1,0 +1,7 @@
+C:\DotNetHelloWorldWebApp\publish\HelloWorldWebApp.exe
+C:\DotNetHelloWorldWebApp\publish\appsettings.Development.json
+C:\DotNetHelloWorldWebApp\publish\appsettings.json
+C:\DotNetHelloWorldWebApp\publish\HelloWorldWebApp.dll
+C:\DotNetHelloWorldWebApp\publish\HelloWorldWebApp.deps.json
+C:\DotNetHelloWorldWebApp\publish\HelloWorldWebApp.runtimeconfig.json
+C:\DotNetHelloWorldWebApp\publish\HelloWorldWebApp.pdb

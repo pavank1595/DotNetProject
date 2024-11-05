@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XC/U5Dyl1io=",
+  "dgSpecHash": "qTzEs6ulMcY=",
   "success": true,
-  "projectFilePath": "C:\\HelloWorldWebApp\\HelloWorldWebApp\\HelloWorldWebApp.csproj",
+  "projectFilePath": "C:\\DotNetHelloWorldWebApp\\HelloWorldWebApp.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
