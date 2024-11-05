@@ -49,5 +49,5 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Build Artifacts'
       inputs:
-        PathtoPublish: 'c:/publishedfiles'
+        PathtoPublish: 'c:/customstagingdirectory'
         ArtifactName: 'drop'
