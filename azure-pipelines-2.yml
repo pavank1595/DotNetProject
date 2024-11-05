@@ -59,6 +59,6 @@ stages:
         serverUrl: 'ftp://4.237.75.19'  # FTP server address
         username: '$(FTP_USERNAME)'  # FTP username
         password: '$(FTP_PASSWORD)'  # FTP password
-        rootDirectory: 'c:/customstagingdirectory/drop'  # Folder where artifacts are stored
+        rootDirectory: 'c:/customstagingdirectory'  # Folder where artifacts are stored
         remoteDirectory: 'c:/inetpub/dotnetproject'  # Remote folder on IIS server
         clean: true  # Optional: Clean the remote folder before uploading
