@@ -7,8 +7,9 @@ trigger:
 - master
 
 pool:
+  name: "Demo_DotNet_Project_Pool"
   demands:
-  name: agent1
+    - agent.name -equals agent1
 
 steps:
 - script: echo Hello, world!
