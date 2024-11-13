@@ -1,10 +1,9 @@
-trigger:
-- master
+trigger: none
 
 pool:
-  name: "DotNetPool"
+  name: "windowspool"
   demands:
-    - Agent.Name -equals linux-agent
+    - Agent.Name -equals windowsagent
 
 variables:
   buildConfiguration: "Release"
@@ -40,11 +39,11 @@ stages:
       inputs:
         command: "publish"
         projects: "**/*.csproj"
-        arguments: "--configuration $(buildConfiguration) --output /home/devopsagentlinux/agent_work"
+        arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
     
     - task: PublishBuildArtifacts@1
       displayName: "Publishing build artifacts"
       inputs:
-        PathtoPublish: "/home/devopsagentlinux/agent_work"
+        PathtoPublish: "$(Build.ArtifactStagingDirectory)"
         ArtifactName: "myArtifact"
 
