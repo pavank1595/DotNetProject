@@ -12,56 +12,56 @@ variables:
   deployPath: 'C:\inetpub\myApp'  # Path to the directory on your web server
 
 stages:
-- stage: Build
-  displayName: "Build Stage"
-  jobs:
-  - job: BuildJob
-    displayName: "Build the project"
-    steps:
-    - task: CopyFiles@2
-      displayName: "copy files from default location"
-      inputs:
-        SourceFolder: 'C:/vsts-agent/_work/1/s'
-        Contents: '**/*'
-        TargetFolder: 'C:/dotnet_code'
-    - task: DotNetCoreCLI@2
-      displayName: "Restore NuGet Packages"
-      inputs:
-        command: "restore"
-        workingDirectory: 'C:/dotnet_code'
-        projects: "**/*.csproj"
+# - stage: Build
+#   displayName: "Build Stage"
+#   jobs:
+#   - job: BuildJob
+#     displayName: "Build the project"
+#     steps:
+#     - task: CopyFiles@2
+#       displayName: "copy files from default location"
+#       inputs:
+#         SourceFolder: 'C:/vsts-agent/_work/1/s'
+#         Contents: '**/*'
+#         TargetFolder: 'C:/dotnet_code'
+#     - task: DotNetCoreCLI@2
+#       displayName: "Restore NuGet Packages"
+#       inputs:
+#         command: "restore"
+#         workingDirectory: 'C:/dotnet_code'
+#         projects: "**/*.csproj"
 
-    - task: DotNetCoreCLI@2
-      displayName: "Building the project"
-      inputs:
-        command: "build"
-        workingDirectory: 'C:/dotnet_code'
-        projects: "**/*.csproj"
-        arguments: "--configuration $(buildConfiguration)"
+#     - task: DotNetCoreCLI@2
+#       displayName: "Building the project"
+#       inputs:
+#         command: "build"
+#         workingDirectory: 'C:/dotnet_code'
+#         projects: "**/*.csproj"
+#         arguments: "--configuration $(buildConfiguration)"
 
-- stage: Publish
-  displayName: "Publish Stage"
-  jobs:
-  - job: PublishJob
-    displayName: "Publish the project"
-    steps:
-    - task: DotNetCoreCLI@2
-      displayName: "Publishing the project"
-      inputs:
-        command: "publish"
-        workingDirectory: 'C:/dotnet_code'
-        projects: "**/*.csproj"
-        arguments: "--configuration $(buildConfiguration) --output $(dotNetCodeLocation)/publish_package"
+# - stage: Publish
+#   displayName: "Publish Stage"
+#   jobs:
+#   - job: PublishJob
+#     displayName: "Publish the project"
+#     steps:
+#     - task: DotNetCoreCLI@2
+#       displayName: "Publishing the project"
+#       inputs:
+#         command: "publish"
+#         workingDirectory: 'C:/dotnet_code'
+#         projects: "**/*.csproj"
+#         arguments: "--configuration $(buildConfiguration) --output $(dotNetCodeLocation)/publish_package"
     
-    - task: PublishBuildArtifacts@1
-      displayName: "Publishing build artifacts"
-      inputs:
-        PathtoPublish: "$(dotNetCodeLocation)/publish_package"
-        ArtifactName: "myArtifact"
+#     - task: PublishBuildArtifacts@1
+#       displayName: "Publishing build artifacts"
+#       inputs:
+#         PathtoPublish: "$(dotNetCodeLocation)/publish_package"
+#         ArtifactName: "myArtifact"
 
 - stage: Deploy
   displayName: "Deploy Stage"
-  dependsOn: Publish
+  # dependsOn: Publish
   jobs:
   - job: DeployJob
     displayName: "Deploy to Web Server"
