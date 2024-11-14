@@ -9,7 +9,7 @@ variables:
   buildConfiguration: "Release"
   dotNetCodeLocation: "C:/dotnet_code"
   webServer: "your-web-server-name"  # Name or IP address of your web server
-  deployPath: "C:/inetpub/wwwroot/myapp"  # Path to the directory on your web server
+  deployPath: 'C:\inetpub\myApp'  # Path to the directory on your web server
 
 stages:
 - stage: Build
@@ -70,4 +70,14 @@ stages:
       displayName: "Download Artifact"
       inputs:
         artifactName: "myArtifact"
-        downloadPath: "$(dotNetCodeLocation)/myArtifact"
+        downloadPath: "$(dotNetCodeLocation)"
+
+    - task: WindowsMachineFileCopy@2
+      displayName: "Deploying files to Web Server"
+      inputs:
+        SourcePath: "$(dotNetCodeLocation)/publish_package"
+        TargetPath: "$(deployPath)"
+        MachineNames: "4.200.33.45"
+        AdminUserName: "devuser"  # Provide admin username for the server
+        AdminPassword: "devuser@1234"  # Provide admin password securely
+
