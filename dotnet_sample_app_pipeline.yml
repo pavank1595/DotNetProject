@@ -7,6 +7,7 @@ pool:
 
 variables:
   buildConfiguration: "Release"
+  dotNetCodeLocation: "C:/dotnet_code"
   
 stages:
 - stage: Build
@@ -36,22 +37,23 @@ stages:
         projects: "**/*.csproj"
         arguments: "--configuration $(buildConfiguration)"
 
-# - stage: Publish
-#   displayName: "Publish Stage"
-#   jobs:
-#   - job: PublishJob
-#     displayName: "Publish the project"
-#     steps:
-#     - task: DotNetCoreCLI@2
-#       displayName: "Publishing the project"
-#       inputs:
-#         command: "publish"
-#         projects: "**/*.csproj"
-#         arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
+- stage: Publish
+  displayName: "Publish Stage"
+  jobs:
+  - job: PublishJob
+    displayName: "Publish the project"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Publishing the project"
+      inputs:
+        command: "publish"
+        workingDirectory: 'C:\dotnet_code'
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration) --output $(dotnetCodeLocation)"
     
-#     - task: PublishBuildArtifacts@1
-#       displayName: "Publishing build artifacts"
-#       inputs:
-#         PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-#         ArtifactName: "myArtifact"
+    - task: PublishBuildArtifacts@1
+      displayName: "Publishing build artifacts"
+      inputs:
+        PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+        ArtifactName: "myArtifact"
 
