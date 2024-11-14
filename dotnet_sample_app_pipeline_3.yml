@@ -70,4 +70,4 @@ stages:
       displayName: "Download Artifact"
       inputs:
         artifactName: "myArtifact"
-        downloadPath: "$(Agent.TempDirectory)"
+        downloadPath: "$(dotNetCodeLocation)/myArtifact"
