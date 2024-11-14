@@ -1,0 +1,83 @@
+trigger: none
+
+pool:
+  name: "windowspool"
+  demands:
+    - Agent.Name -equals windowsagent
+
+variables:
+  buildConfiguration: "Release"
+  dotNetCodeLocation: "C:/dotnet_code"
+  webServer: "your-web-server-name"  # Name or IP address of your web server
+  deployPath: "C:/inetpub/wwwroot/myapp"  # Path to the directory on your web server
+
+stages:
+- stage: Build
+  displayName: "Build Stage"
+  jobs:
+  - job: BuildJob
+    displayName: "Build the project"
+    steps:
+    - task: CopyFiles@2
+      displayName: "copy files from default location"
+      inputs:
+        SourceFolder: 'C:\vsts-agent\_work\1\s'
+        Contents: '**\*'
+        TargetFolder: 'C:\dotnet_code'
+    - task: DotNetCoreCLI@2
+      displayName: "Restore NuGet Packages"
+      inputs:
+        command: "restore"
+        workingDirectory: 'C:\dotnet_code'
+        projects: "**/*.csproj"
+
+    - task: DotNetCoreCLI@2
+      displayName: "Building the project"
+      inputs:
+        command: "build"
+        workingDirectory: 'C:\dotnet_code'
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration)"
+
+- stage: Publish
+  displayName: "Publish Stage"
+  jobs:
+  - job: PublishJob
+    displayName: "Publish the project"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Publishing the project"
+      inputs:
+        command: "publish"
+        workingDirectory: 'C:\dotnet_code'
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration) --output $(dotNetCodeLocation)/publish_package"
+    
+    - task: PublishBuildArtifacts@1
+      displayName: "Publishing build artifacts"
+      inputs:
+        PathtoPublish: "$(dotNetCodeLocation)/publish_package"
+        ArtifactName: "myArtifact"
+
+- stage: Deploy
+  displayName: "Deploy Stage"
+  dependsOn: Publish
+  jobs:
+  - job: DeployJob
+    displayName: "Deploy to Web Server"
+    steps:
+    - task: DownloadBuildArtifacts@1
+      displayName: "Download Artifact"
+      inputs:
+        artifactName: "myArtifact"
+        downloadPath: "$(Agent.TempDirectory)/myArtifact"
+
+    - task: WindowsMachineFileCopy@2
+      displayName: "Deploying files to Web Server"
+      inputs:
+        SourcePath: "$(Agent.TempDirectory)/myArtifact/publish_package"
+        TargetPath: "$(deployPath)"
+        MachineName: "$(webServer)"
+        AdminUserName: "$(webServerUser)"  # Provide admin username for the server
+        AdminPassword: "$(webServerPassword)"  # Provide admin password securely
+        TargetMachineType: "RemoteWindows"  # Ensure that the target is a remote Windows machine
