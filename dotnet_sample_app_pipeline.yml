@@ -49,11 +49,11 @@ stages:
         command: "publish"
         workingDirectory: 'C:\dotnet_code'
         projects: "**/*.csproj"
-        arguments: "--configuration $(buildConfiguration) --output $(dotnetCodeLocation)"
+        arguments: "--configuration $(buildConfiguration) --output $(dotNetCodeLocation)/publish_package"
     
     - task: PublishBuildArtifacts@1
       displayName: "Publishing build artifacts"
       inputs:
-        PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+        PathtoPublish: "$(dotNetCodeLocation)/publish_package"
         ArtifactName: "myArtifact"
 
