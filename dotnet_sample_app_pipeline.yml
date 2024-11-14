@@ -21,12 +21,12 @@ stages:
         command: "restore"
         projects: "**/*.csproj"
 
-    - task: DotNetCoreCLI@2
-      displayName: "Building the project"
-      inputs:
-        command: "build"
-        projects: "**/*.csproj"
-        arguments: "--configuration $(buildConfiguration)"
+    # - task: DotNetCoreCLI@2
+    #   displayName: "Building the project"
+    #   inputs:
+    #     command: "build"
+    #     projects: "**/*.csproj"
+    #     arguments: "--configuration $(buildConfiguration)"
 
 # - stage: Publish
 #   displayName: "Publish Stage"
