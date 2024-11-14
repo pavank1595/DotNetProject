@@ -72,12 +72,12 @@ stages:
         artifactName: "myArtifact"
         downloadPath: "$(Agent.TempDirectory)/myArtifact"
 
-    - task: WindowsMachineFileCopy@2
-      displayName: "Deploying files to Web Server"
-      inputs:
-        SourcePath: "$(Agent.TempDirectory)/myArtifact/publish_package"
-        TargetPath: "$(deployPath)"
-        MachineName: "$(webServer)"
-        AdminUserName: "$(webServerUser)"  # Provide admin username for the server
-        AdminPassword: "$(webServerPassword)"  # Provide admin password securely
-        TargetMachineType: "RemoteWindows"  # Ensure that the target is a remote Windows machine
+    # - task: WindowsMachineFileCopy@2
+    #   displayName: "Deploying files to Web Server"
+    #   inputs:
+    #     SourcePath: "$(Agent.TempDirectory)/myArtifact/publish_package"
+    #     TargetPath: "$(deployPath)"
+    #     MachineName: "$(webServer)"
+    #     AdminUserName: "$(webServerUser)"  # Provide admin username for the server
+    #     AdminPassword: "$(webServerPassword)"  # Provide admin password securely
+    #     TargetMachineType: "RemoteWindows"  # Ensure that the target is a remote Windows machine
