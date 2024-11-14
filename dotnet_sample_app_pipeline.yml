@@ -15,6 +15,12 @@ stages:
   - job: BuildJob
     displayName: "Build the project"
     steps:
+    - task: CopyFiles@2
+      displayName: "copy files from default location"
+      inputs:
+        SourceFolder: 'C:\vsts-agent\_work\1\s'
+        Contents: '*'
+        TargetFolder: 'C:\dotnet_code'
     - task: DotNetCoreCLI@2
       displayName: "Restore NuGet Packages"
       inputs:
