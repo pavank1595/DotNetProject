@@ -21,29 +21,29 @@ stages:
         command: "restore"
         projects: "**/*.csproj"
 
-    # - task: DotNetCoreCLI@2
-    #   displayName: "Building the project"
-    #   inputs:
-    #     command: "build"
-    #     projects: "**/*.csproj"
-    #     arguments: "--configuration $(buildConfiguration)"
+    - task: DotNetCoreCLI@2
+      displayName: "Building the project"
+      inputs:
+        command: "build"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration)"
 
-# - stage: Publish
-#   displayName: "Publish Stage"
-#   jobs:
-#   - job: PublishJob
-#     displayName: "Publish the project"
-#     steps:
-#     - task: DotNetCoreCLI@2
-#       displayName: "Publishing the project"
-#       inputs:
-#         command: "publish"
-#         projects: "**/*.csproj"
-#         arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
+- stage: Publish
+  displayName: "Publish Stage"
+  jobs:
+  - job: PublishJob
+    displayName: "Publish the project"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Publishing the project"
+      inputs:
+        command: "publish"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
     
-#     - task: PublishBuildArtifacts@1
-#       displayName: "Publishing build artifacts"
-#       inputs:
-#         PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-#         ArtifactName: "myArtifact"
+    - task: PublishBuildArtifacts@1
+      displayName: "Publishing build artifacts"
+      inputs:
+        PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+        ArtifactName: "myArtifact"
 
