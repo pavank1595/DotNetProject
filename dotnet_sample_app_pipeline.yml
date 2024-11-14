@@ -19,7 +19,7 @@ stages:
       displayName: "copy files from default location"
       inputs:
         SourceFolder: 'C:\vsts-agent\_work\1\s'
-        Contents: '*'
+        Contents: '**\*'
         TargetFolder: 'C:\dotnet_code'
     - task: DotNetCoreCLI@2
       displayName: "Restore NuGet Packages"
