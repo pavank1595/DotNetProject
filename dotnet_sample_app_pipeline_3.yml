@@ -66,11 +66,11 @@ stages:
   - job: DeployJob
     displayName: "Deploy to Web Server"
     steps:
-    - task: DownloadBuildArtifacts@1
-      displayName: "Download Artifact"
-      inputs:
-        artifactName: "myArtifact"
-        downloadPath: "$(dotNetCodeLocation)"
+    # - task: DownloadBuildArtifacts@1
+    #   displayName: "Download Artifact"
+    #   inputs:
+    #     artifactName: "myArtifact"
+    #     downloadPath: "$(dotNetCodeLocation)"
 
     - task: WindowsMachineFileCopy@2
       displayName: "Deploying files to Web Server"
