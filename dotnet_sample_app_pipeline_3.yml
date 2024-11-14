@@ -77,7 +77,7 @@ stages:
       inputs:
         SourcePath: "$(dotNetCodeLocation)/publish_package"
         TargetPath: "$(deployPath)"
-        MachineNames: "4.200.33.45"
+        MachineNames: "20.82.137.234"
         AdminUserName: "devuser"  # Provide admin username for the server
-        AdminPassword: "devuser@1234"  # Provide admin password securely
+        AdminPassword: "randomuser@123"  # Provide admin password securely
 
