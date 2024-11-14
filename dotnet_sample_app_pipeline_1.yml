@@ -7,6 +7,7 @@ pool:
 
 variables:
   buildConfiguration: "Release"
+  dotNetCodeLocation: "C:/dotnet_code"
   
 stages:
 - stage: Build
@@ -15,16 +16,24 @@ stages:
   - job: BuildJob
     displayName: "Build the project"
     steps:
+    - task: CopyFiles@2
+      displayName: "copy files from default location"
+      inputs:
+        SourceFolder: 'C:\vsts-agent\_work\1\s'
+        Contents: '**\*'
+        TargetFolder: 'C:\dotnet_code'
     - task: DotNetCoreCLI@2
       displayName: "Restore NuGet Packages"
       inputs:
         command: "restore"
+        workingDirectory: 'C:\dotnet_code'
         projects: "**/*.csproj"
 
     - task: DotNetCoreCLI@2
       displayName: "Building the project"
       inputs:
         command: "build"
+        workingDirectory: 'C:\dotnet_code'
         projects: "**/*.csproj"
         arguments: "--configuration $(buildConfiguration)"
 
@@ -38,12 +47,13 @@ stages:
       displayName: "Publishing the project"
       inputs:
         command: "publish"
+        workingDirectory: 'C:\dotnet_code'
         projects: "**/*.csproj"
-        arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
+        arguments: "--configuration $(buildConfiguration) --output $(dotNetCodeLocation)/publish_package"
     
     - task: PublishBuildArtifacts@1
       displayName: "Publishing build artifacts"
       inputs:
-        PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+        PathtoPublish: "$(dotNetCodeLocation)/publish_package"
         ArtifactName: "myArtifact"
 
