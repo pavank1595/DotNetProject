@@ -36,6 +36,7 @@ app.MapGet("/", () =>
         <body>
             <h1>Welcome to My Simple .NET 8 Web Application!</h1>
             <p>This is a basic HTML page served by ASP.NET Core.</p>
+            <p>This is Version 2.0</p>
         </body>
         </html>";
     return Results.Content(htmlContent, "text/html");
