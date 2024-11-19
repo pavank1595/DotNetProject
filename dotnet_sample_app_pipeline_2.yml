@@ -56,4 +56,7 @@ stages:
       inputs:
         PathtoPublish: "$(dotNetCodeLocation)/publish_package"
         ArtifactName: "myArtifact"
+    
+
+    
 
