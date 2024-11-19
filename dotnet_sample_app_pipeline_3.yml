@@ -8,76 +8,72 @@ pool:
 variables:
   buildConfiguration: "Release"
   dotNetCodeLocation: "C:/dotnet_code"
-  webServer: "your-web-server-name"  # Name or IP address of your web server
-  deployPath: 'C:\inetpub\myApp'  # Path to the directory on your web server
+  webServer: "72.145.8.167"  # Name or IP address of your web server
+  deployPath: "C:/inetpub/app_v1.0"  # Path to the directory on your web server
 
 stages:
-# - stage: Build
-#   displayName: "Build Stage"
-#   jobs:
-#   - job: BuildJob
-#     displayName: "Build the project"
-#     steps:
-#     - task: CopyFiles@2
-#       displayName: "copy files from default location"
-#       inputs:
-#         SourceFolder: 'C:/vsts-agent/_work/1/s'
-#         Contents: '**/*'
-#         TargetFolder: 'C:/dotnet_code'
-#     - task: DotNetCoreCLI@2
-#       displayName: "Restore NuGet Packages"
-#       inputs:
-#         command: "restore"
-#         workingDirectory: 'C:/dotnet_code'
-#         projects: "**/*.csproj"
+- stage: Build
+  displayName: "Build Stage"
+  jobs:
+  - job: BuildJob
+    displayName: "Build the project"
+    steps:
 
-#     - task: DotNetCoreCLI@2
-#       displayName: "Building the project"
-#       inputs:
-#         command: "build"
-#         workingDirectory: 'C:/dotnet_code'
-#         projects: "**/*.csproj"
-#         arguments: "--configuration $(buildConfiguration)"
+    - task: CopyFiles@2
+      displayName: "copy files from default location"
+      inputs:
+        SourceFolder: "C:/vsts-agent/_work/1/s"
+        Contents: "**/*"
+        TargetFolder: "C:/dotnet_code"
 
-# - stage: Publish
-#   displayName: "Publish Stage"
-#   jobs:
-#   - job: PublishJob
-#     displayName: "Publish the project"
-#     steps:
-#     - task: DotNetCoreCLI@2
-#       displayName: "Publishing the project"
-#       inputs:
-#         command: "publish"
-#         workingDirectory: 'C:/dotnet_code'
-#         projects: "**/*.csproj"
-#         arguments: "--configuration $(buildConfiguration) --output $(dotNetCodeLocation)/publish_package"
+    - task: DotNetCoreCLI@2
+      displayName: "Restore NuGet Packages"
+      inputs:
+        command: "restore"
+        workingDirectory: "C:/dotnet_code"
+        projects: "**/*.csproj"
+
+    - task: DotNetCoreCLI@2
+      displayName: "Building the project"
+      inputs:
+        command: "build"
+        workingDirectory: "C:/dotnet_code"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration)"
+
+- stage: Publish
+  displayName: "Publish Stage"
+  jobs:
+  - job: PublishJob
+    displayName: "Publish the project"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Publishing the project"
+      inputs:
+        command: "publish"
+        workingDirectory: "C:/dotnet_code"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration) --output $(dotNetCodeLocation)/publish_package"
     
-#     - task: PublishBuildArtifacts@1
-#       displayName: "Publishing build artifacts"
-#       inputs:
-#         PathtoPublish: "$(dotNetCodeLocation)/publish_package"
-#         ArtifactName: "myArtifact"
+    - task: PublishBuildArtifacts@1
+      displayName: "Publishing build artifacts"
+      inputs:
+        PathtoPublish: "$(dotNetCodeLocation)/publish_package"
+        ArtifactName: "myArtifact"
 
 - stage: Deploy
   displayName: "Deploy Stage"
-  # dependsOn: Publish
+  dependsOn: Publish
   jobs:
   - job: DeployJob
     displayName: "Deploy to Web Server"
     steps:
-    # - task: DownloadBuildArtifacts@1
-    #   displayName: "Download Artifact"
-    #   inputs:
-    #     artifactName: "myArtifact"
-    #     downloadPath: "$(dotNetCodeLocation)"
-
-    - task: WindowsMachineFileCopy@2
-      displayName: "Deploying files to Web Server"
+    - task: PowerShell@2
+      displayName: "Copy files to remote server"
       inputs:
-        SourcePath: "$(dotNetCodeLocation)/publish_package"
-        TargetPath: "$(deployPath)"
-        MachineNames: "20.82.137.234"
-        AdminUserName: "devuser"  # Provide admin username for the server
-        AdminPassword: "randomuser@123"  # Provide admin password securely
+        targetType: "inline"
+        script: |
+          $session = New-PSSession -ComputerName "$(webServer)" -Credential (Get-Credential)
+          Copy-Item -Path "$(dotNetCodeLocation)/publish_package/*.zip" -Destination "$(deployPath)" -ToSession $session
+          Remove-PSSession $session
 
