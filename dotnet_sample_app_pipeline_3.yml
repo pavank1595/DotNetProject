@@ -10,6 +10,8 @@ variables:
   dotNetCodeLocation: "C:/dotnet_code"
   webServer: "72.145.8.167"  # Name or IP address of your web server
   deployPath: "C:/inetpub/app_v1.0"  # Path to the directory on your web server
+  username: "devuser"
+  password: "randomuser@123"
 
 stages:
 - stage: Build
@@ -73,7 +75,14 @@ stages:
       inputs:
         targetType: "inline"
         script: |
-          $session = New-PSSession -ComputerName "$(webServer)" -Credential (Get-Credential)
+          # Create a session using the username and password
+          $username = "$(username)"
+          $password = ConvertTo-SecureString "$(password)" -AsPlainText -Force
+          $credential = New-Object System.Management.Automation.PSCredential($username, $password)
+
+          # Create the remote session
+          $session = New-PSSession -ComputerName "$(webServer)" -Credential $credential
+          
+          # Copy the files
           Copy-Item -Path "$(dotNetCodeLocation)/publish_package/*.zip" -Destination "$(deployPath)" -ToSession $session
           Remove-PSSession $session
-
